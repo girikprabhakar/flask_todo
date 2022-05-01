@@ -1,7 +1,39 @@
 version: '3'
 services:
-  flask_todo:
-    image: 8285/flask_todo
-    container_name: flask_todo
+  web:
+    image: flask_todo
+    restart: always
+    container_name: flask_todo_test
     ports:
       - 5001:5000
+    environment:
+      - DEBUG=0
+    networks:
+      - flask_todo_network
+
+  proxy:
+    build: proxy
+    restart: always
+    ports:
+      - 80:80
+    networks:
+      - flask_todo_network
+
+  db:
+    image: postgres:13
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - flask_todo_network
+    volumes:
+      - postgres_todo_data:/var/lib/postgres/data
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=todo
+networks:
+  flask_todo_network:
+
+volumes:
+  postgres_todo_data:

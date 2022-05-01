@@ -1,12 +1,15 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
+import os
+from todo_app import app, db
+os.environ['DEBUG'] = '1'
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"exit()
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)
 
 
 class Todo(db.Model):
@@ -62,4 +65,4 @@ def delete(sno):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=os.getenv('DEBUG') == '1', port=5000, host='0.0.0.0')
