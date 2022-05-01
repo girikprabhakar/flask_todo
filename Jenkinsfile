@@ -10,12 +10,11 @@ pipeline{
         stage("Building Image"){
             steps{
                 echo "========Building Image========"
+                sh "cd web"
                 script {
-                    docker.withRegistry( "https://registry.hub.docker.com", registryCredential ) {
-                    // dockerImage.push("$BUILD_NUMBER")
-                    dockerImage.push('latest')
+                    dockerImage = docker.build(imagename)
                 }
-                }
+                sh "cd .."
             }
             // post{
             //     always{
@@ -32,11 +31,12 @@ pipeline{
         stage("Pushing Image"){
             steps{
                 echo "========Pushing Image========"
-                sh "cd web"
                 script {
-                    dockerImage = docker.build(imagename)
+                    docker.withRegistry( "https://registry.hub.docker.com", registryCredential ) {
+                    // dockerImage.push("$BUILD_NUMBER")
+                    dockerImage.push('latest')
                 }
-                sh "cd .."
+                }
             }
             // post{
             //     always{
